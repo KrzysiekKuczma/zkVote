@@ -107,8 +107,10 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           </MenuButton>
         </HStack>
 
-        <MenuList>
-          <MenuItem onClick={disconnect} icon={<AiOutlineDisconnect size={18} />}>
+        <MenuList 
+          bg={'black'}>
+          <MenuItem 
+            bg={'black'} onClick={disconnect} icon={<AiOutlineDisconnect size={18} />}>
             Disconnect
           </MenuItem>
 
@@ -116,6 +118,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           <MenuDivider />
           {(supportedChains || []).map((chain) => (
             <MenuItem
+              bg={'black'}
               key={chain.network}
               isDisabled={chain.network === activeChain?.network}
               onClick={() => {
@@ -136,6 +139,8 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           <MenuDivider />
           {(accounts || []).map((acc) => (
             <MenuItem
+
+              bg={'black'}
               key={acc.address}
               isDisabled={acc.address === account.address}
               onClick={() => {

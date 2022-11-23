@@ -14,7 +14,7 @@ const HomePage: NextPage = () => {
       {/* Top Bar */}
       <HomeTopBar />
 
-      <div className="flex flex-col max-w-7xl w-7xl mx-auto space-y-8 py-[100px]">
+      <div className="flex flex-col max-w-7xl w-7xl mx-auto space-y-8 py-[50px]">
         <HomePageTitle />
         
         {/* Connect Wallet Button */}
