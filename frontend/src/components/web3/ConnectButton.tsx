@@ -9,15 +9,15 @@ import {
   MenuList,
   Text,
   VStack,
-} from '@chakra-ui/react'
-import { supportedChains } from '@deployments/chains'
-import { formatBalance } from '@polkadot/util'
-import { truncateHash } from '@shared/truncateHash'
-import { FC, useEffect, useState } from 'react'
-import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
-import { FiChevronDown } from 'react-icons/fi'
-import 'twin.macro'
-import { usePolkadotProviderContext } from './PolkadotProvider'
+} from '@chakra-ui/react';
+import { supportedChains } from '@deployments/chains';
+import { formatBalance } from '@polkadot/util';
+import { truncateHash } from '@shared/truncateHash';
+import { FC, useEffect, useState } from 'react';
+import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai';
+import { FiChevronDown } from 'react-icons/fi';
+import 'twin.macro';
+import { usePolkadotProviderContext } from './PolkadotProvider';
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -31,30 +31,30 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
     account,
     accounts,
     setAccount,
-  } = usePolkadotProviderContext()
+  } = usePolkadotProviderContext();
 
   // Fetch & update Account Balance
-  const [balanceFormatted, setBalanceFormatted] = useState<string>()
+  const [balanceFormatted, setBalanceFormatted] = useState<string>();
   const fetchBalance = async () => {
     if (!api || !account?.address) {
-      setBalanceFormatted(undefined)
-      return
+      setBalanceFormatted(undefined);
+      return;
     }
 
-    const properties = ((await api.rpc.system.properties())?.toHuman() as any) || {}
-    const tokenSymbol = properties?.tokenSymbol?.[0] || 'UNIT'
-    const result: any = await api.query.system.account(account.address)
-    const fullBalance = result?.data?.reserved?.add(result?.data?.free) || 0
+    const properties = ((await api.rpc.system.properties())?.toHuman() as any) || {};
+    const tokenSymbol = properties?.tokenSymbol?.[0] || 'UNIT';
+    const result: any = await api.query.system.account(account.address);
+    const fullBalance = result?.data?.reserved?.add(result?.data?.free) || 0;
     const balance = formatBalance(fullBalance, {
       decimals: 12,
       forceUnit: '-',
       withUnit: false,
-    }).split('.')[0]
-    setBalanceFormatted(`${balance} ${tokenSymbol}`)
-  }
+    }).split('.')[0];
+    setBalanceFormatted(`${balance} ${tokenSymbol}`);
+  };
   useEffect(() => {
-    fetchBalance()
-  }, [api, account])
+    fetchBalance();
+  }, [api, account]);
 
   // Connect Button
   if (!account)
@@ -70,7 +70,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
       >
         Connect Wallet
       </Button>
-    )
+    );
 
   // Account Menu & Disconnect Button
   return (
@@ -119,7 +119,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
               key={chain.network}
               isDisabled={chain.network === activeChain?.network}
               onClick={() => {
-                setActiveChain?.(chain)
+                setActiveChain?.(chain);
               }}
             >
               <CheckboxIcon />
@@ -139,7 +139,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
               key={acc.address}
               isDisabled={acc.address === account.address}
               onClick={() => {
-                setAccount?.(acc)
+                setAccount?.(acc);
               }}
             >
               <CheckboxIcon />
@@ -155,5 +155,5 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
         </MenuList>
       </Menu>
     </>
-  )
-}
+  );
+};

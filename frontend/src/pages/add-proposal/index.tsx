@@ -1,5 +1,5 @@
+import { AddProposal } from '@components/add-proposal/AddProposal';
 import { HomePageTitle } from '@components/home/HomePageTitle';
-import { HomeProposals } from '@components/home/HomeProposals';
 import { HomeTopBar } from '@components/home/HomeTopBar';
 import { CenterBody } from '@components/layout/CenterBody';
 import { ChainInfo } from '@components/web3/ChainInfo';
@@ -8,22 +8,19 @@ import { ZkGovernorContractInteractions } from '@components/web3/ZkGovernorContr
 import type { NextPage } from 'next';
 import 'twin.macro';
 
-const HomePage: NextPage = () => {
+const AddProposalPage: NextPage = () => {
   return (
     <>
       {/* Top Bar */}
       <HomeTopBar />
 
-      <div className="flex flex-col max-w-7xl w-7xl mx-auto space-y-8 py-[100px]">
-        <HomePageTitle />
-        
+      <div className="flex flex-col w-5xl mx-auto space-y-8 py-[32px]">
         {/* Connect Wallet Button */}
         <div className="mx-auto">
           <ConnectButton />
         </div>
-        
-
-        <HomeProposals />
+      
+        <AddProposal />
 
         {/* Chain Metadata Information */}
         {/* <ChainInfo /> */}
@@ -35,4 +32,4 @@ const HomePage: NextPage = () => {
   );
 };
 
-export default HomePage;
+export default AddProposalPage;

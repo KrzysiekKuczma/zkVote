@@ -6,9 +6,9 @@ import toast from 'react-hot-toast'
 import 'twin.macro'
 import { usePolkadotProviderContext } from './PolkadotProvider'
 
-export const GreeterContractInteractions: FC = () => {
+export const ZkGovernorContractInteractions: FC = () => {
   const { account, signer } = usePolkadotProviderContext()
-  const { contract } = useDeployment(ContractKeys.greeter)
+  const { contract } = useDeployment(ContractKeys.zkGovernor)
   const [greeterMessage, setGreeterMessage] = useState<string>()
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
   const [updateIsLoading, setUpdateIsLoading] = useState<boolean>()
@@ -19,6 +19,7 @@ export const GreeterContractInteractions: FC = () => {
     if (!contract) return
     setFetchIsLoading(true)
     try {
+      // FIXME: Replace query/method to call a contract with
       const { result, output } = await contract.query.greet('', {})
       const message = output?.toString()
       if (!result?.isOk) throw new Error(result.toString())

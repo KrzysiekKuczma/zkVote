@@ -1,12 +1,12 @@
-import { extractCritical } from '@emotion/server'
-import Document, { Head, Html, Main, NextScript } from 'next/document'
-import { Fragment, ReactFragment } from 'react'
+import { extractCritical } from '@emotion/server';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
+import { Fragment, ReactFragment } from 'react';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: any) {
-    const initialProps = await Document.getInitialProps(ctx)
-    const critical = extractCritical(initialProps.html)
-    initialProps.html = critical.html
+    const initialProps = await Document.getInitialProps(ctx);
+    const critical = extractCritical(initialProps.html);
+    initialProps.html = critical.html;
     initialProps.styles = (
       <Fragment>
         {initialProps.styles}
@@ -15,8 +15,8 @@ export default class MyDocument extends Document {
           dangerouslySetInnerHTML={{ __html: critical.css }}
         />
       </Fragment>
-    ) as any as ReactFragment
-    return initialProps
+    ) as any as ReactFragment;
+    return initialProps;
   }
 
   render() {
@@ -39,6 +39,6 @@ export default class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    )
+    );
   }
 }

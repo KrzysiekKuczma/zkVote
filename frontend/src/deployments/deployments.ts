@@ -9,7 +9,9 @@ import path from 'path'
  * IMPORTANT: The respective abi & address jsons must be under `/packages/contracts/${contract}/deployments/`
  */
 export enum ContractKeys {
-  greeter = 'greeter',
+  // greeter = 'greeter',
+  zkGovernor = 'zkGovernor',
+  zkGovernanceToken = 'zkGovernanceToken'
 }
 
 /**
