@@ -1,74 +1,67 @@
 #![cfg_attr(not(feature = "std"), no_std)]
+#![feature(min_specialization)]
 
-use ink_lang as ink;
-
-#[ink::contract]
-mod zk_governance_token {
-
-    /// Defines the storage of your contract.
-    /// Add new fields to the below struct in order
-    /// to add new static storage fields to your contract.
+use openbrush::contracts::psp22::PSP22;
+#[openbrush::contract]
+pub mod my_psp22 {
+    // imports from ink!
+	use ink_storage::traits::SpreadAllocate;
+	use openbrush::contracts::ownable::*;
+    
+    // imports from openbrush
+	
+	use openbrush::traits::Storage;
+	use openbrush::contracts::psp22::extensions::mintable::*;
+	use openbrush::contracts::psp22::extensions::metadata::*;
+    
     #[ink(storage)]
-    pub struct ZkGovernanceToken {
-        /// Stores a single `bool` value on the storage.
-        value: bool,
+    #[derive(Default, SpreadAllocate, Storage)]
+    pub struct AlephVote {
+    	#[storage_field]
+		psp22: psp22::Data,
+		#[storage_field]
+		ownable: ownable::Data,
+		#[storage_field]
+		metadata: metadata::Data,
     }
-
-    impl ZkGovernanceToken {
-        /// Constructor that initializes the `bool` value to the given `init_value`.
+    
+    // Section contains default implementation without any modifications
+	impl PSP22 for AlephVote {}
+	impl Ownable for AlephVote {}
+	impl PSP22Mintable for AlephVote {
+		#[ink(message)]
+		#[openbrush::modifiers(only_owner)]
+		fn mint(
+            &mut self,
+            account: AccountId,
+			amount: Balance
+        ) -> Result<(), PSP22Error> {
+			self._mint(account, amount)
+		}
+	}
+	impl PSP22Metadata for AlephVote {}
+    
+    impl AlephVote {
         #[ink(constructor)]
-        pub fn new(init_value: bool) -> Self {
-            Self { value: init_value }
-        }
-
-        /// Constructor that initializes the `bool` value to `false`.
-        ///
-        /// Constructors can delegate to other constructors.
-        #[ink(constructor)]
-        pub fn default() -> Self {
-            Self::new(Default::default())
-        }
-
-        /// A message that can be called on instantiated contracts.
-        /// This one flips the value of the stored `bool` from `true`
-        /// to `false` and vice versa.
-        #[ink(message)]
-        pub fn flip(&mut self) {
-            self.value = !self.value;
-        }
-
-        /// Simply returns the current value of our `bool`.
-        #[ink(message)]
-        pub fn get(&self) -> bool {
-            self.value
+        pub fn new(initial_supply: Balance) -> Self {
+            ink_lang::codegen::initialize_contract(|_instance: &mut AlephVote|{
+				_instance._mint(_instance.env().caller(), initial_supply).expect("Should mint"); 
+				_instance._init_with_owner(_instance.env().caller());
+				_instance.metadata.name = Some("alephVoteVer1".to_string());
+				_instance.metadata.symbol = Some("AV1".to_string());
+				_instance.metadata.decimals = 18;
+			})
         }
     }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ink_lang as ink;
 
-    /// Unit tests in Rust are normally defined within such a `#[cfg(test)]`
-    /// module and test functions are marked with a `#[test]` attribute.
-    /// The below code is technically just normal Rust code.
-    #[cfg(test)]
-    mod tests {
-        /// Imports all the definitions from the outer scope so we can use them here.
-        use super::*;
-
-        /// Imports `ink_lang` so we can use `#[ink::test]`.
-        use ink_lang as ink;
-
-        /// We test if the default constructor does its job.
-        #[ink::test]
-        fn default_works() {
-            let zk_governance_token = ZkGovernanceToken::default();
-            assert_eq!(zk_governance_token.get(), false);
-        }
-
-        /// We test a simple use case of our contract.
-        #[ink::test]
-        fn it_works() {
-            let mut zk_governance_token = ZkGovernanceToken::new(false);
-            assert_eq!(zk_governance_token.get(), false);
-            zk_governance_token.flip();
-            assert_eq!(zk_governance_token.get(), true);
-        }
+    #[ink::test]
+    fn total_supply_works() {
+        let test_token = my_psp22::AlephVote::new(1000);
+        assert_eq!(test_token.total_supply(), 1000);
     }
 }
