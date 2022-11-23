@@ -55,7 +55,6 @@ pub mod my_psp22 {
     }
 }
 #[cfg(test)]
-use openbrush::contracts::psp22::PSP22;
 mod tests {
     use super::*;
     use ink_lang as ink;
