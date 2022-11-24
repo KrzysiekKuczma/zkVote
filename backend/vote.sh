@@ -3,7 +3,7 @@
 #seed = $2;
 #option = $3; (for/against address)
 
-cd /home/jan/tmp/blend2/blender-cli/
+cd ../blend2/blender-cli
 
 pwd
 
