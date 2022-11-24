@@ -1,77 +1,77 @@
-import { Button, Card, FormControl, FormLabel, Input, Stack, Wrap } from '@chakra-ui/react'
-import { ContractKeys, useDeployment } from '@deployments/deployments'
-import { FC, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
-import 'twin.macro'
-import { usePolkadotProviderContext } from './PolkadotProvider'
+import { Button, Card, FormControl, FormLabel, Input, Stack, Wrap } from '@chakra-ui/react';
+import { ContractKeys, useDeployment } from '@deployments/deployments';
+import { FC, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import 'twin.macro';
+import { usePolkadotProviderContext } from './PolkadotProvider';
 
 export const ZkGovernorContractInteractions: FC = () => {
-  const { account, signer } = usePolkadotProviderContext()
-  const { contract } = useDeployment(ContractKeys.zkGovernor)
-  const [greeterMessage, setGreeterMessage] = useState<string>()
-  const [fetchIsLoading, setFetchIsLoading] = useState<boolean>()
-  const [updateIsLoading, setUpdateIsLoading] = useState<boolean>()
-  const form = useForm<{ newMessage: string }>()
+  const { account, signer } = usePolkadotProviderContext();
+  const { contract } = useDeployment(ContractKeys.zkGovernor);
+  const [greeterMessage, setGreeterMessage] = useState<string>();
+  const [fetchIsLoading, setFetchIsLoading] = useState<boolean>();
+  const [updateIsLoading, setUpdateIsLoading] = useState<boolean>();
+  const form = useForm<{ newMessage: string }>();
 
   // Fetch Greeting
   const fetchGreeting = async () => {
-    if (!contract) return
-    setFetchIsLoading(true)
+    if (!contract) return;
+    setFetchIsLoading(true);
     try {
       // FIXME: Replace query/method to call a contract with
-      const { result, output } = await contract.query.greet('', {})
-      const message = output?.toString()
-      if (!result?.isOk) throw new Error(result.toString())
-      setGreeterMessage(message)
+      const { result, output } = await contract.query.greet('', {});
+      const message = output?.toString();
+      if (!result?.isOk) throw new Error(result.toString());
+      setGreeterMessage(message);
     } catch (e) {
-      console.error(e)
-      toast.error('Error while fetching greeting. Try again…')
-      setGreeterMessage(undefined)
+      console.error(e);
+      toast.error('Error while fetching greeting. Try again…');
+      setGreeterMessage(undefined);
     } finally {
-      setFetchIsLoading(false)
+      setFetchIsLoading(false);
     }
-  }
+  };
   useEffect(() => {
-    fetchGreeting()
-  }, [contract])
+    fetchGreeting();
+  }, [contract]);
 
   // Update Greeting
   const updateGreeting = async () => {
     if (!account || !contract || !signer) {
-      toast.error('Wallet not connected. Try again…')
-      return
+      toast.error('Wallet not connected. Try again…');
+      return;
     }
 
-    setUpdateIsLoading(true)
+    setUpdateIsLoading(true);
     try {
       // Gather form value
-      const newMessage = form.getValues('newMessage')
+      const newMessage = form.getValues('newMessage');
 
       // Estimate gas
       const { gasRequired } = await contract.query.setMessage(
         account.address,
         { storageDepositLimit: null, gasLimit: -1 },
         newMessage,
-      )
-      const gasLimit = gasRequired.toNumber() * 1.5
+      );
+      const gasLimit = gasRequired.toNumber() * 1.5;
 
       // Execute transaction
       await contract.tx
         .setMessage({ gasLimit }, newMessage)
         .signAndSend(account.address, (result) => {
-          if (result?.status?.isInBlock) fetchGreeting()
-        })
-      toast.success(`Successfully updated greeting`)
+          if (result?.status?.isInBlock) fetchGreeting();
+        });
+      toast.success('Successfully updated greeting');
     } catch (e) {
-      console.error(e)
-      toast.error('Error while updating greeting. Try again.')
+      console.error(e);
+      toast.error('Error while updating greeting. Try again.');
     } finally {
-      setUpdateIsLoading(false)
+      setUpdateIsLoading(false);
     }
-  }
+  };
 
-  if (!contract) return null
+  if (!contract) return null;
 
   return (
     <>
@@ -110,5 +110,5 @@ export const ZkGovernorContractInteractions: FC = () => {
         )}
       </Wrap>
     </>
-  )
-}
+  );
+};

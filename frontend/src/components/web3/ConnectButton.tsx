@@ -50,6 +50,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
       forceUnit: '-',
       withUnit: false,
     }).split('.')[0];
+    
     setBalanceFormatted(`${balance} ${tokenSymbol}`);
   };
   useEffect(() => {

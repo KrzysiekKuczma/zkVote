@@ -1,5 +1,5 @@
-import { PolkadotProviderChain } from '@components/web3/PolkadotProvider'
-import { env } from '@shared/environment'
+import { PolkadotProviderChain } from '@components/web3/PolkadotProvider';
+import { env } from '@shared/environment';
 
 /**
  * Defined Chain Constants
@@ -11,7 +11,7 @@ export const development: PolkadotProviderChain = {
   rpcUrls: ['ws://127.0.0.1:9944'],
   testnet: true,
   faucetUrls: ['https://polkadot.js.org/apps/#/accounts?rpc=ws://127.0.0.1:9944'],
-}
+};
 
 export const alephzeroTestnet: PolkadotProviderChain = {
   network: 'alephzero-testnet',
@@ -19,18 +19,26 @@ export const alephzeroTestnet: PolkadotProviderChain = {
   rpcUrls: ['wss://ws.test.azero.dev'],
   testnet: true,
   faucetUrls: ['https://faucet.test.azero.dev/'],
-}
+};
+
+export const alephzeroSmartnet: PolkadotProviderChain = {
+  network: 'alephzero-smartnet',
+  name: 'Aleph Zero Smartnet',
+  rpcUrls: ['wss://ws-smartnet.test.azero.dev'],
+  testnet: true,
+  faucetUrls: ['https://faucet-smartnet.test.azero.dev/'],
+};
 
 /**
  * Helper functions to extract all chains, default chain, and supported chains
  * defined within environment (see `.env.local.example`)
  */
-export const allChains: PolkadotProviderChain[] = [development, alephzeroTestnet]
+export const allChains: PolkadotProviderChain[] = [development, alephzeroTestnet, alephzeroSmartnet];
 
 export const defaultChain: PolkadotProviderChain = allChains.filter(
   (chain) => env.defaultChain === chain.network,
-)[0]
+)[0];
 
 export const supportedChains: PolkadotProviderChain[] = allChains.filter((chain) =>
   env.supportedChains.includes(chain.network),
-)
+);

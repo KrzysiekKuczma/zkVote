@@ -1,8 +1,8 @@
-import { usePolkadotProviderContext } from '@components/web3/PolkadotProvider'
-import { Abi, ContractPromise } from '@polkadot/api-contract'
-import { env } from '@shared/environment'
-import { useEffect, useState } from 'react'
-import path from 'path'
+import { usePolkadotProviderContext } from '@components/web3/PolkadotProvider';
+import { Abi, ContractPromise } from '@polkadot/api-contract';
+import { env } from '@shared/environment';
+import { useEffect, useState } from 'react';
+import path from 'path';
 /**
  * All deployed contracts for ABIs and/or addresses below
  * NOTE: Add new contracts here
@@ -10,8 +10,8 @@ import path from 'path'
  */
 export enum ContractKeys {
   // greeter = 'greeter',
-  zkGovernor = 'zkGovernor',
-  zkGovernanceToken = 'zkGovernanceToken'
+  zkGovernor = 'zk_governor',
+  zkGovernanceToken = 'zk_governance_token'
 }
 
 /**
@@ -23,7 +23,7 @@ export enum ContractKeys {
  * (Deployed) contract addresses by network identifier
  */
 
-const directory = path.resolve(__dirname, '..')
+const directory = path.resolve(__dirname, '..');
 export type AddressesType = { [_: string]: Promise<{ address: string }> }
 export type AllAddressesType = { [_ in ContractKeys]: AddressesType }
 export const allAddresses = Object.keys(ContractKeys).reduce<AllAddressesType>(
@@ -38,7 +38,7 @@ export const allAddresses = Object.keys(ContractKeys).reduce<AllAddressesType>(
     ),
   }),
   {} as AllAddressesType,
-)
+);
 
 /**
  * (Deployed) contract abis
@@ -50,38 +50,38 @@ export const allABIs = Object.keys(ContractKeys).reduce<AllABIsType>(
     [contract]: import(`${directory}/../contracts/${contract}/deployments/metadata.json`),
   }),
   {} as AllABIsType,
-)
+);
 
 /**
  * Helper hook to access abis and addresses by active chain
  */
 export const useDeployment = (key: ContractKeys) => {
-  const { api, activeChain } = usePolkadotProviderContext()
-  const [contractABI, setContractABI] = useState<object>()
-  const [contractAddress, setContractAddress] = useState<string>()
-  const [contract, setContract] = useState<ContractPromise>()
+  const { api, activeChain } = usePolkadotProviderContext();
+  const [contractABI, setContractABI] = useState<object>();
+  const [contractAddress, setContractAddress] = useState<string>();
+  const [contract, setContract] = useState<ContractPromise>();
 
   const update = async () => {
     if (!activeChain?.network) {
-      setContractABI(undefined)
-      setContractAddress(undefined)
-      setContract(undefined)
-      return
+      setContractABI(undefined);
+      setContractAddress(undefined);
+      setContract(undefined);
+      return;
     }
-    const abi = await allABIs[key]
-    setContractABI(abi)
-    const address = (await allAddresses[key]?.[activeChain?.network])?.address
-    setContractAddress(address)
-    const contract = api && address ? new ContractPromise(api, abi, address) : undefined
-    setContract(contract)
-  }
+    const abi = await allABIs[key];
+    setContractABI(abi);
+    const address = (await allAddresses[key]?.[activeChain?.network])?.address;
+    setContractAddress(address);
+    const contract = api && address ? new ContractPromise(api, abi, address) : undefined;
+    setContract(contract);
+  };
   useEffect(() => {
-    update()
-  }, [api])
+    update();
+  }, [api]);
 
   return {
     contractABI,
     contractAddress,
     contract,
-  }
-}
+  };
+};
