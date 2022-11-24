@@ -114,9 +114,13 @@ pub mod governor {
             if proposal.executed {
                 return Err(GovernorError::ProposalAlreadyExecuted)
             }
-            let proposal_vote = self.proposal_votes.get(proposal_id).unwrap_or_default();
+            let weight_for = self.account_weight(proposal.for_address);
+            let weight_against = self.account_weight(proposal.against_address);
+            let mut proposal_current_vote = self.proposal_votes.get(proposal_id).unwrap_or_default();
+            proposal_current_vote.for_votes = weight_for;
+            proposal_current_vote.against_votes = weight_against;
 
-            if proposal_vote.against_votes >= proposal_vote.for_votes {
+            if proposal_current_vote.against_votes >= proposal_current_vote.for_votes {
                 return Err(GovernorError::ProposalNotAccepted)
             }
 
