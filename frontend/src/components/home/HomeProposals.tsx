@@ -12,7 +12,7 @@ export const HomeProposals: FC = () => {
       </h2>
 
       <div className="flex flex-col space-y-4">
-        <Link href="/proposal/aaa-b-asdf-asd-as" className="flex space-x-[32px] border-[2px] border-gray-500 p-8 rounded-md">
+        <Link href="/proposal/0" className="flex space-x-[32px] border-[2px] border-gray-500 p-8 rounded-md">
           <div className="flex flex-col space-y-2">
             <h3 className="text-xl font-medium text-gray-200">Remove Paweł from the HackOnChain team</h3>
             <p className="text-gray-400 text-sm max-w-[600px]">Snacks. We love snacks. Definitely we love snacks. Why there are any snacks on the venue? Why do I have to steal energy drinks from random table? Why the whole world is against us? Can’t we just get prizes, get drunk, party and back home next day? I totally don’t get it.</p>
@@ -45,7 +45,7 @@ export const HomeProposals: FC = () => {
           </div>
         </Link>
 
-        <Link href="/proposal/aaa-b-asdf-asd-asaaaa" className="flex space-x-[32px] border-[2px] border-gray-500 p-8 rounded-md">
+        <Link href="/proposal/1" className="flex space-x-[32px] border-[2px] border-gray-500 p-8 rounded-md">
           <div className="flex flex-col space-y-2">
             <h3 className="text-xl font-medium text-gray-200">Remove Paweł from the HackOnChain team</h3>
             <p className="text-gray-400 text-sm max-w-[600px]">Snacks. We love snacks. Definitely we love snacks. Why there are any snacks on the venue? Why do I have to steal energy drinks from random table? Why the whole world is against us? Can’t we just get prizes, get drunk, party and back home next day? I totally don’t get it.</p>

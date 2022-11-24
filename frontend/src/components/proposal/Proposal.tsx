@@ -1,10 +1,28 @@
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import 'twin.macro';
+import { usePolkadotProviderContext } from '../web3/PolkadotProvider';
+import { ZkGovernorContractInteractions } from '@components/web3/ZkGovernorContractInteractions';
 
 export const Proposal = ({id}: {id: string}) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const {
+    activeChain,
+    api,
+    account,
+    accounts,
+  } = usePolkadotProviderContext();
+
+  const sendVote = async (kind: 'against' | 'for') => {
+    axios.post('http://localhost:8000/', {
+      'amount': 100,
+      'seed': '//Alice',
+      'option': (kind === 'for') ? '5CiCMK4JAxTvfygV1tqavoSyCsXGWYhhPYNxjdrFsBNJ1LRy' : '5FNVFEemK2vg7fdEinh4sVeiPh4XsHvB7Vii3UfLHLj7EBgX',
+    }).then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
 
   return (
     <>
@@ -12,7 +30,7 @@ export const Proposal = ({id}: {id: string}) => {
       <div className="flex space-x-8">
         <div className="space-y-4">
           <h2 className="text-3xl font-extrabold text-gray-200">
-            TITLE {id}
+            TITLE - {id}
           </h2>
 
           <p className="text-gray-400 text-sm max-w-[600px]">Snacks. We love snacks. Definitely we love snacks. Why there are any snacks on the venue? Why do I have to steal energy drinks from random table? Why the whole world is against us? Can’t we just get prizes, get drunk, party and back home next day? I totally don’t get it.</p>
@@ -85,8 +103,15 @@ export const Proposal = ({id}: {id: string}) => {
                 </div>
                 {/* buttons */}
                 <div className="px-4 py-3 flex text-black space-x-4 justify-center">
-                  <button onClick={() => setModalOpen(!isModalOpen)} type="button" className="font-mono px-3 py-2 font-bold border-[2px] border-red-500 rounded-md hover:bg-red-600 text-white">Vote against</button>
-                  <button onClick={() => setModalOpen(!isModalOpen)} type="button" className="font-mono px-3 py-2 font-bold border-[2px] bg-black border-green-500 text-white rounded-md hover:bg-green-600">Vote for</button>
+                  <button onClick={async () => {
+                    await sendVote('against');
+                    setModalOpen(!isModalOpen);
+                  }} type="button" className="font-mono px-3 py-2 font-bold border-[2px] border-red-500 rounded-md hover:bg-red-600 text-white">Vote against</button>
+
+                  <button onClick={async () => {
+                    await sendVote('for');
+                    setModalOpen(!isModalOpen);
+                  }} type="button" className="font-mono px-3 py-2 font-bold border-[2px] bg-black border-green-500 text-white rounded-md hover:bg-green-600">Vote for</button>
                 </div>
               </div>
             </div>

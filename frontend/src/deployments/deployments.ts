@@ -10,8 +10,8 @@ import path from 'path';
  */
 export enum ContractKeys {
   // greeter = 'greeter',
-  zkGovernor = 'zk_governor',
-  zkGovernanceToken = 'zk_governance_token'
+  zk_governor = 'zk_governor',
+  zk_governance_token = 'zk_governance_token'
 }
 
 /**
@@ -26,31 +26,33 @@ export enum ContractKeys {
 const directory = path.resolve(__dirname, '..');
 export type AddressesType = { [_: string]: Promise<{ address: string }> }
 export type AllAddressesType = { [_ in ContractKeys]: AddressesType }
-export const allAddresses = Object.keys(ContractKeys).reduce<AllAddressesType>(
-  (acc: any, contract: string) => ({
-    ...acc,
-    [contract]: env.supportedChains.reduce(
-      (acc: any, chain: string) => ({
-        ...acc,
-        [chain]: import(`${directory}/../contracts/${contract}/deployments/${chain}.json`),
-      }),
-      {},
-    ),
-  }),
-  {} as AllAddressesType,
-);
+// export const allAddresses = Object.keys(ContractKeys).reduce<AllAddressesType>(
+//   (acc: any, contract: string) => ({
+//     ...acc,
+//     [contract]: env.supportedChains.reduce(
+//       (acc: any, chain: string) => ({
+//         ...acc,
+//         [chain]: import(`${directory}/../contracts/${contract}/deployments/${chain}.json`),
+//       }),
+//       {},
+//     ),
+//   }),
+//   {} as AllAddressesType,
+// );
 
 /**
  * (Deployed) contract abis
  */
 export type AllABIsType = { [_ in ContractKeys]: Promise<Abi> }
-export const allABIs = Object.keys(ContractKeys).reduce<AllABIsType>(
-  (acc: any, contract: string) => ({
-    ...acc,
-    [contract]: import(`${directory}/../contracts/${contract}/deployments/metadata.json`),
-  }),
-  {} as AllABIsType,
-);
+// export const allABIs = Object.keys(ContractKeys).reduce<AllABIsType>(
+//   (acc: any, contract: string) => ({
+//     ...acc,
+//     [contract]: import(`${directory}/../contracts/zk_governor/abi.json`),
+//   }),
+//   {} as AllABIsType,
+// );
+
+export const allABIs = import('../../../contracts/zk_governor/abi.json');
 
 /**
  * Helper hook to access abis and addresses by active chain
@@ -68,9 +70,10 @@ export const useDeployment = (key: ContractKeys) => {
       setContract(undefined);
       return;
     }
-    const abi = await allABIs[key];
+    const abi = await allABIs;
     setContractABI(abi);
-    const address = (await allAddresses[key]?.[activeChain?.network])?.address;
+    // const address = (await allAddresses[key]?.[activeChain?.network])?.address;
+    const address = '5HegvCgQkd2ys4p9SH3u15F9akzMKfvz67ijMJnrjMpyPmyr';
     setContractAddress(address);
     const contract = api && address ? new ContractPromise(api, abi, address) : undefined;
     setContract(contract);

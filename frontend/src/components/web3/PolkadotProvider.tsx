@@ -28,6 +28,7 @@ export type PolkadotProviderContextType = {
   account?: InjectedAccountWithMeta
   signer?: Signer
   setAccount?: Dispatch<SetStateAction<InjectedAccountWithMeta | undefined>>
+  generateAccount?: () => {voteAgainstAddress: string; voteForAddress: string}
 }
 export const PolkadotProviderContext = createContext<PolkadotProviderContextType>({});
 
@@ -60,7 +61,7 @@ export const PolkadotProvider: FC<PolkadotProviderProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>();
   const [unsubscribeAccounts, setUnsubscribeAccounts] = useState<Unsubcall>();
 
-  const generateAccount = () => {
+  const generateAccount = (): {voteAgainstAddress: string; voteForAddress: string} => {
     // Create account seed for Alice
     const VOTE_FOR_SEED = `Vote-for-${Date.now()}`.padEnd(32, ' ');
     const VOTE_AGAINST_SEED = `Vote-against-${Date.now()}`.padEnd(32, ' ');
@@ -83,7 +84,8 @@ export const PolkadotProvider: FC<PolkadotProviderProps> = ({
   const initialize = async () => {
     // Initialize polkadot-js/api
     try {
-      const provider = new WsProvider(activeChain.rpcUrls[0]);
+      const provider = new WsProvider('wss://ws-smartnet.test.azero.dev');
+      console.log(provider);
       setProvider(provider);
       const api = await ApiPromise.create({ provider });
       setApi(api);
@@ -175,6 +177,7 @@ export const PolkadotProvider: FC<PolkadotProviderProps> = ({
         account,
         signer,
         setAccount,
+        generateAccount
       }}
     >
       {children}

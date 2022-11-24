@@ -20,6 +20,12 @@ app.post('/', (req, res) => {
     console.log('stdout: ' + data);
   });
 
+  process.stderr.on('error', function(data) {
+    //Here is where the output goes
+
+    console.log('error: ' + data);
+  });
+
   return process;
 })
 

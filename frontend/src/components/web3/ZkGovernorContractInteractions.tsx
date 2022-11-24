@@ -6,109 +6,82 @@ import toast from 'react-hot-toast';
 import 'twin.macro';
 import { usePolkadotProviderContext } from './PolkadotProvider';
 
-export const ZkGovernorContractInteractions: FC = () => {
-  const { account, signer } = usePolkadotProviderContext();
-  const { contract } = useDeployment(ContractKeys.zkGovernor);
+export const ZkGovernorContractInteractions = () => {
+  // const { account, signer } = usePolkadotProviderContext();
+  const { contract } = useDeployment(ContractKeys.zk_governor);
   const [greeterMessage, setGreeterMessage] = useState<string>();
-  const [fetchIsLoading, setFetchIsLoading] = useState<boolean>();
-  const [updateIsLoading, setUpdateIsLoading] = useState<boolean>();
-  const form = useForm<{ newMessage: string }>();
 
-  // Fetch Greeting
-  const fetchGreeting = async () => {
+  const [proposalsCount, setProposalsCount] = useState<number>();
+
+  const [fetchIsLoading, setFetchIsLoading] = useState<boolean>();
+
+
+  const fetchSize = async () => {
     if (!contract) return;
     setFetchIsLoading(true);
+
     try {
       // FIXME: Replace query/method to call a contract with
-      const { result, output } = await contract.query.greet('', {});
+      const { result, output } = await contract.query.getProposalsSize('', {});
       const message = output?.toString();
+
       if (!result?.isOk) throw new Error(result.toString());
-      setGreeterMessage(message);
+
+      console.log({message});
+      setProposalsCount(parseInt(message!));
     } catch (e) {
       console.error(e);
-      toast.error('Error while fetching greeting. Try again…');
-      setGreeterMessage(undefined);
+      toast.error('Error while fetching proposals count. Try again…');
+      setProposalsCount(0);
     } finally {
       setFetchIsLoading(false);
     }
   };
+
   useEffect(() => {
-    fetchGreeting();
+    fetchSize();
   }, [contract]);
 
   // Update Greeting
-  const updateGreeting = async () => {
-    if (!account || !contract || !signer) {
-      toast.error('Wallet not connected. Try again…');
-      return;
-    }
+  // const updateGreeting = async () => {
+  //   if (!account || !contract || !signer) {
+  //     toast.error('Wallet not connected. Try again…');
+  //     return;
+  //   }
 
-    setUpdateIsLoading(true);
-    try {
-      // Gather form value
-      const newMessage = form.getValues('newMessage');
+  //   setUpdateIsLoading(true);
+  //   try {
+  //     // Gather form value
+  //     const newMessage = form.getValues('newMessage');
 
-      // Estimate gas
-      const { gasRequired } = await contract.query.setMessage(
-        account.address,
-        { storageDepositLimit: null, gasLimit: -1 },
-        newMessage,
-      );
-      const gasLimit = gasRequired.toNumber() * 1.5;
+  //     // Estimate gas
+  //     const { gasRequired } = await contract.query.setMessage(
+  //       account.address,
+  //       { storageDepositLimit: null, gasLimit: -1 },
+  //       newMessage,
+  //     );
+  //     const gasLimit = gasRequired.toNumber() * 1.5;
 
-      // Execute transaction
-      await contract.tx
-        .setMessage({ gasLimit }, newMessage)
-        .signAndSend(account.address, (result) => {
-          if (result?.status?.isInBlock) fetchGreeting();
-        });
-      toast.success('Successfully updated greeting');
-    } catch (e) {
-      console.error(e);
-      toast.error('Error while updating greeting. Try again.');
-    } finally {
-      setUpdateIsLoading(false);
-    }
-  };
+  //     // Execute transaction
+  //     await contract.tx
+  //       .setMessage({ gasLimit }, newMessage)
+  //       .signAndSend(account.address, (result) => {
+  //         if (result?.status?.isInBlock) fetchGreeting();
+  //       });
+  //     toast.success('Successfully updated greeting');
+  //   } catch (e) {
+  //     console.error(e);
+  //     toast.error('Error while updating greeting. Try again.');
+  //   } finally {
+  //     setUpdateIsLoading(false);
+  //   }
+  // };
 
   if (!contract) return null;
 
-  return (
-    <>
-      <h2 tw="mt-10 mb-4 font-mono text-gray-400">Greeter Smart Contract</h2>
-      <Wrap>
-        {/* Fetched Greeting */}
-        <Card variant="outline" p={4}>
-          <FormControl>
-            <FormLabel>Fetched Greeting</FormLabel>
-            <Input placeholder={fetchIsLoading ? 'Loading…' : greeterMessage} disabled={true} />
-          </FormControl>
-        </Card>
-
-        {/* Update Greeting */}
-        {!!signer && (
-          <Card variant="outline" p={4}>
-            <form>
-              <Stack direction="row" spacing={2} align="end">
-                <FormControl>
-                  <FormLabel>Update Greeting</FormLabel>
-                  <Input disabled={updateIsLoading} {...form.register('newMessage')} />
-                </FormControl>
-                <Button
-                  mt={4}
-                  colorScheme="purple"
-                  isLoading={updateIsLoading}
-                  disabled={updateIsLoading}
-                  type="button"
-                  onClick={updateGreeting}
-                >
-                  Submit
-                </Button>
-              </Stack>
-            </form>
-          </Card>
-        )}
-      </Wrap>
-    </>
-  );
+  return {
+    fetchSize,
+    contract,
+    proposalsCount
+  };
 };
