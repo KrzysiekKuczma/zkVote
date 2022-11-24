@@ -87,7 +87,7 @@ export const HomeProposals: FC = () => {
 
       <div className="flex flex-col space-y-4">
         {proposals.map((proposal, index) => (
-          <Link key={index} href={`/proposal/${index}`} className="flex space-x-[32px] border-[2px] border-gray-500 p-8 rounded-md">
+          <Link key={index} href={`/proposal/${index}`} className="flex space-x-[32px] justify-between border-[2px] border-gray-500 p-8 rounded-md">
             <div className="flex flex-col space-y-2">
               <h3 className="text-xl font-medium text-gray-200">{proposal.title}</h3>
               <p className="text-gray-400 text-sm max-w-[600px]">{proposal.description}</p>

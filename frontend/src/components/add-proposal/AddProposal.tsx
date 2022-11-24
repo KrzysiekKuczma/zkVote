@@ -15,15 +15,7 @@ export const AddProposal: FC = () => {
   const { contract } = useDeployment(ContractKeys.zk_governor);
   // const [proposal, setProposal]= useState<AddProposal>();
   const {
-    activeChain,
-    setActiveChain,
-    api,
-    connect,
-    disconnect,
-    isLoading,
-    account,
     accounts,
-    setAccount,
   } = usePolkadotProviderContext();
 
   console.log(accounts);
@@ -55,6 +47,12 @@ export const AddProposal: FC = () => {
     setAddresses({voteAgainstAddress, voteForAddress});
     return {voteAgainstAddress, voteForAddress};
   };
+
+  useEffect(() => {
+    if(!addresses) return;
+    
+    generateAccount();
+  }, [addresses]);
 
   const gasLimit = 3000n * 1000000n;
   const storageDepositLimit = null;
