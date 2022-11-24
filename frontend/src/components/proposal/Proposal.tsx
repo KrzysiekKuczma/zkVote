@@ -17,8 +17,8 @@ export const Proposal = ({id}: {id: string}) => {
 
   const sendVote = async (kind: 'against' | 'for') => {
     axios.post('http://localhost:8000/', {
-      'amount': 100,
       'seed': '//Alice',
+      'amount': 100,
       'option': (kind === 'for') ? '5CiCMK4JAxTvfygV1tqavoSyCsXGWYhhPYNxjdrFsBNJ1LRy' : '5FNVFEemK2vg7fdEinh4sVeiPh4XsHvB7Vii3UfLHLj7EBgX',
     }).then(res => console.log(res))
       .catch(err => console.log(err));
