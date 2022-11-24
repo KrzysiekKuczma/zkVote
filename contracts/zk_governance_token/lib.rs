@@ -2,7 +2,7 @@
 #![feature(min_specialization)]
 
 #[openbrush::contract]
-pub mod my_psp22 {
+pub mod zk_vote_dao_governance_token {
     // imports from ink!
 	use ink_storage::traits::SpreadAllocate;
 	use ink_prelude::string::String;
@@ -61,7 +61,7 @@ mod tests {
 
     #[ink::test]
     fn total_supply_works() {
-        let test_token = my_psp22::AlephVote::new(1000, Some("Test Vote Token".to_string()), Some("TVT".to_string()), 18);
+        let test_token = zk_vote_dao_governance_token::AlephVote::new(1000, Some("Test Vote Token".to_string()), Some("TVT".to_string()), 18);
         assert_eq!(test_token.total_supply(), 1000);
     }
 }
