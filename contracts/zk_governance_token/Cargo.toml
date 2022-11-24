@@ -1,8 +1,8 @@
 [package]
-name = "my_psp22"
+name = "zk_vote_dao_governance_token"
 version = "1.0.0"
 edition = "2021"
-authors = ["The best developer ever"]
+authors = ["zkVote"]
 
 [dependencies]
 ink_primitives = { version = "~3.3.0", default-features = false }
@@ -20,7 +20,7 @@ scale-info = { version = "2", default-features = false, features = ["derive"], o
 openbrush = { version = "~2.2.0", default-features = false, features = ["psp22", "pausable", "ownable"] }
 
 [lib]
-name = "my_psp22"
+name = "zk_vote_dao_governance_token"
 path = "lib.rs"
 crate-type = [
     # Used for normal contract Wasm blobs.
