@@ -64,12 +64,6 @@ export const useDeployment = (key: ContractKeys) => {
   const [contract, setContract] = useState<ContractPromise>();
 
   const update = async () => {
-    if (!activeChain?.network) {
-      setContractABI(undefined);
-      setContractAddress(undefined);
-      setContract(undefined);
-      return;
-    }
     const abi = await allABIs;
     setContractABI(abi);
     // const address = (await allAddresses[key]?.[activeChain?.network])?.address;

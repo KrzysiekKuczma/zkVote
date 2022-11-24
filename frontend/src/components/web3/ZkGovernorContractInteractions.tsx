@@ -7,14 +7,9 @@ import 'twin.macro';
 import { usePolkadotProviderContext } from './PolkadotProvider';
 
 export const ZkGovernorContractInteractions = () => {
-  // const { account, signer } = usePolkadotProviderContext();
   const { contract } = useDeployment(ContractKeys.zk_governor);
-  const [greeterMessage, setGreeterMessage] = useState<string>();
-
   const [proposalsCount, setProposalsCount] = useState<number>();
-
   const [fetchIsLoading, setFetchIsLoading] = useState<boolean>();
-
 
   const fetchSize = async () => {
     if (!contract) return;
