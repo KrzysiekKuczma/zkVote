@@ -129,7 +129,7 @@ pub mod governor {
         }
 
         #[ink(message)]
-        pub fn get_proposal_vote(&mut self, proposal_id: ProposalId) -> Result<Option<ProposalVote>, GovernorError> {
+        pub fn get_proposal_vote(&self, proposal_id: ProposalId) -> Result<ProposalVote, GovernorError> {
             let proposal = self
                 .proposals
                 .get(&proposal_id)
@@ -143,13 +143,11 @@ pub mod governor {
             }
             let weight_for = self.account_weight(proposal.for_address);
             let weight_against = self.account_weight(proposal.against_address);
-            let mut proposal_vote = self.proposal_votes.get(proposal_id).unwrap_or_default();
-            proposal_vote.for_votes = weight_for;
-            proposal_vote.against_votes = weight_against;
-
-            self.proposal_votes.insert(&proposal_id, &proposal_vote);
+            let mut proposal_current_vote = self.proposal_votes.get(proposal_id).unwrap_or_default();
+            proposal_current_vote.for_votes = weight_for;
+            proposal_current_vote.against_votes = weight_against;
            
-            Ok(self.proposal_votes.get(proposal_id))
+            Ok(proposal_current_vote)
         }
 
         #[ink(message)]
