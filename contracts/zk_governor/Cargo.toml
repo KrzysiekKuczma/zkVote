@@ -1,8 +1,8 @@
 [package]
-name = "zkVoteDAO"
+name = "zk_vote_dao"
 version = "0.1.0"
 authors = ["zkVote"]
-edition = "2022"
+edition = "2021"
 
 [dependencies]
 ink_primitives = { version = "~3.3.0", default-features = false }
@@ -18,7 +18,7 @@ scale-info = { version = "2", default-features = false, features = ["derive"], o
 openbrush = { version = "~2.1.0", default-features = false, features = ["psp22"] }
 
 [lib]
-name = "zkVoteDAO"
+name = "zk_vote_dao"
 path = "lib.rs"
 crate-type = [
     # Used for normal contract Wasm blobs.
