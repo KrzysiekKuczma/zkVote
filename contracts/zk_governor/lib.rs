@@ -152,6 +152,11 @@ pub mod governor {
             self.proposals.get(proposal_id)
         }
 
+        #[ink(message)]
+        pub fn get_proposals_size(&self) -> ProposalId {
+            self.next_proposal_id
+        }
+
         fn account_weight(&self, caller: AccountId) -> u8 {
             let balance = PSP22Ref::balance_of(&self.governance_token, caller);
             balance as u8
