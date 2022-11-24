@@ -129,25 +129,18 @@ pub mod governor {
         }
 
         #[ink(message)]
-        pub fn get_proposal_vote(&self, proposal_id: ProposalId) -> Result<ProposalVote, GovernorError> {
+        pub fn get_proposal_vote(&self, proposal_id: ProposalId) -> Option<ProposalVote> {
             let proposal = self
                 .proposals
                 .get(&proposal_id)
-                .ok_or(GovernorError::ProposalNotFound)?;
-            if proposal.executed {
-                return Err(GovernorError::ProposalAlreadyExecuted)
-            }
-            let now = self.env().block_timestamp();
-            if now > proposal.vote_end {
-                return Err(GovernorError::VotePeriodEnded)
-            }
+                .ok_or(GovernorError::ProposalNotFound).ok()?;
             let weight_for = self.account_weight(proposal.for_address);
             let weight_against = self.account_weight(proposal.against_address);
             let mut proposal_current_vote = self.proposal_votes.get(proposal_id).unwrap_or_default();
             proposal_current_vote.for_votes = weight_for;
             proposal_current_vote.against_votes = weight_against;
            
-            Ok(proposal_current_vote)
+            Some(proposal_current_vote)
         }
 
         #[ink(message)]
